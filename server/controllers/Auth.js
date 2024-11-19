@@ -12,7 +12,7 @@ const sendOTP = async (req, res) => {
     //2. validate email is exist or not:-
     const checkUserPresent = await User.findOne({ email: email });
     if (checkUserPresent) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         message: "Email already exists",
       });
@@ -44,7 +44,7 @@ const sendOTP = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "error in sendOTP try catch block" + err.message,
     });
@@ -139,14 +139,14 @@ const signup = async (req, res) => {
       image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`,
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "User signup successful",
       user,
     });
   } catch (err) {
     console.log(err);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "error in Signup try catch block" + err.message,
     });
@@ -157,7 +157,7 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      req.status(403).json({
+      return res.status(403).json({
         success: false,
         message: "All fields are required",
       });
@@ -197,7 +197,7 @@ const login = async (req, res) => {
       httpOnly: true,
     };
     res.cookie("token", token, options);
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       token,
       message: "login successfull and token generated",
@@ -205,7 +205,7 @@ const login = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "error in login try catch block" + err.message,
     });
@@ -223,7 +223,7 @@ const changePassword = async (req, res) => {
     }
 
     if (newPassword != confirmNewPassword) {
-      res.status(401).json({
+      return res.status(401).json({
         success: false,
         message: "New Password and Confirm New Password does not match",
       });
@@ -253,13 +253,13 @@ const changePassword = async (req, res) => {
       "your password changes successfully"
     );
     await user.save();
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Password changed successfully",
     });
   } catch (err) {
     console.log(err);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "error in changePassword try catch block" + err.message,
     });
@@ -271,8 +271,6 @@ const changePassword = async (req, res) => {
 
 
 
-module.exports = { sendOTP };
 
-module.exports = { sendOTP };
 
 module.exports = { sendOTP, signup, login, changePassword };
